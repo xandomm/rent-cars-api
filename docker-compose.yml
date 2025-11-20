@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: rent_user
+      POSTGRES_PASSWORD: rent_pass
+      POSTGRES_DB: rentcars
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    env_file: .env
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    # optional: mount source for dev
+    volumes:
+      - .:/app
+
+volumes:
+  db-data:
